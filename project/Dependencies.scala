@@ -11,6 +11,7 @@ object Dependencies {
   val AkkaHttp = "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
   val AkkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
 
+  val TypeSafeConfig =  "com.typesafe" % "config" % "1.2.1"
   val SprayVersion = "1.3.6"
   val SprayJson = "io.spray" %%  "spray-json" % SprayVersion
 }

@@ -3,6 +3,7 @@ package bank
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
 import spray.json._
 
 class Controller extends DefaultJsonProtocol with SprayJsonSupport{
@@ -17,7 +18,7 @@ class Controller extends DefaultJsonProtocol with SprayJsonSupport{
     )
   )
 
-  def createAccount = post {
+  def createAccount: Route = post {
     path("api" / "accounts" ) {
       entity(as[Account]) { account=>
         accounts = accounts :+ account
@@ -26,7 +27,7 @@ class Controller extends DefaultJsonProtocol with SprayJsonSupport{
     }
   }
 
-  def getAccount = get {
+  def getAccountByAccountNum: Route = get {
     path ("api" / "accounts" / Segment) { accountNumber=>
       accounts.find(_.accountNumber == accountNumber) match {
         case Some(accountFound)=>
@@ -37,6 +38,6 @@ class Controller extends DefaultJsonProtocol with SprayJsonSupport{
     }
   }
 
-  def allRoutes =
-    createAccount ~ getAccount
+  def allRoutes: Route =
+    createAccount ~ getAccountByAccountNum
 }

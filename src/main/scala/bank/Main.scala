@@ -2,6 +2,7 @@ package bank
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import com.typesafe.config.{Config, ConfigFactory}
 
 
 object Main extends App {
@@ -12,5 +13,9 @@ object Main extends App {
 
   implicit val actorSystem = ActorSystem()
 
-  Http().newServerAt("localhost",9000).bind(controller.allRoutes)
+  val conf = ConfigFactory.load()
+  val appHost = conf.getString("banking-app.host")
+  val appPort = conf.getInt("banking-app.port")
+
+  Http().newServerAt(appHost,appPort).bind(controller.allRoutes)
 }
