@@ -8,7 +8,9 @@ ThisBuild / organizationName := "bank"
 lazy val root = (project in file("."))
   .settings(
     name := "banking-app",
-    libraryDependencies += scalaTest % Test
+    libraryDependencies ++= List(AkkaStreams, AkkaActors, AkkaHttp, AkkaSpray, SprayJson,TypeSafeConfig),
+
+    libraryDependencies ++= List( scalaTest % Test, AkkaStreamTestKit  % Test, AkkaHttpTestKit % Test)
   )
 
 // See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
