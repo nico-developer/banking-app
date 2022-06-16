@@ -2,6 +2,7 @@ package bank.swagger
 
 import bank.Controller
 import com.github.swagger.akka.model.Info
+import com.typesafe.config.ConfigFactory
 import io.swagger.v3.oas.models.ExternalDocumentation
 
 /**
@@ -11,7 +12,10 @@ import io.swagger.v3.oas.models.ExternalDocumentation
  */
 object SwaggerDocService extends SwaggerHttpWithUiService {
   override val apiClasses = Set(classOf[Controller] )
-  override val host = "localhost:9000"
+  val conf = ConfigFactory.load()
+  val appHost = conf.getString("banking-app.host")
+  val appPort = conf.getInt("banking-app.port")
+  override val host = s"${appHost}:${appPort}"
   override val info: Info = Info(version = "1.0")
   override val externalDocs: Option[ExternalDocumentation] = Some(new ExternalDocumentation().description("Core Docs").url("http://acme.com/docs"))
   //use io.swagger.v3.oas.models.security.SecurityScheme to document authn requirements for API
