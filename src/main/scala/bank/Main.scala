@@ -2,8 +2,9 @@ package bank
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import bank.swagger.SwaggerDocService
 import com.typesafe.config.{Config, ConfigFactory}
-
+import akka.http.scaladsl.server.Directives._
 
 object Main extends App {
 
@@ -17,5 +18,5 @@ object Main extends App {
   val appHost = conf.getString("banking-app.host")
   val appPort = conf.getInt("banking-app.port")
 
-  Http().newServerAt(appHost,appPort).bind(controller.allRoutes)
+  Http().newServerAt(appHost,appPort).bind(SwaggerDocService.routes ~ controller.allRoutes)
 }

@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.util.ByteString
-import spray.json.{DefaultJsonProtocol, enrichAny}
+import spray.json.{DefaultJsonProtocol, JsValue, enrichAny}
 class ControllerSpec extends AnyWordSpec with Matchers with ScalatestRouteTest with SprayJsonSupport with DefaultJsonProtocol{
 
   "Banking app" should{
@@ -30,21 +30,27 @@ class ControllerSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
       }
     }
 
-    "get an account" in {
-      val getRequest = HttpRequest(
-        HttpMethods.GET,
-        uri = "/api/accounts/123"
-      )
-      val account = Account(
-        accountNumber = "123",
-        currentBalance = 9999,
-        currency = "PHP",
-        customerFirstName = "Lloyd",
-        customerLastName = "Edano"
-      )
-      getRequest ~> controller.getAccountByAccountNum ~> check {
+    "get account" in {
+      Get("/api/accounts/123") ~> controller.getAccountByAccountNum ~> check {
         status shouldEqual StatusCodes.OK
-        responseAs[String] shouldEqual (s"Account found: ${account.toJson}".toJson).toString
+        val expected: JsValue = """
+                                  |{
+                                  |"accountNumber":"123",
+                                  |"currency":"PHP",
+                                  |"currentBalance":9999.0,
+                                  |"customerFirstName":"Lloyd",
+                                  |"customerLastName":"Edano"
+                                  |}
+                                  |""".stripMargin.replace("\n","").toJson
+
+        responseAs[String].toJson shouldEqual expected
+      }
+    }
+
+    "fail to get non existing account" in {
+      Get("/api/accounts/9999") ~> controller.getAccountByAccountNum ~> check {
+        status shouldEqual StatusCodes.NotFound
+        responseAs[String] shouldEqual "\"Account number 9999 was not found\""
       }
     }
   }
