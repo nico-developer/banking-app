@@ -43,14 +43,14 @@ class ControllerSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
                                   |}
                                   |""".stripMargin.replace("\n","").toJson
 
-        responseAs[String].toJson shouldEqual expected
+        responseAs[JsValue].toJson shouldEqual expected
       }
     }
 
     "fail to get non existing account" in {
       Get("/api/accounts/9999") ~> controller.getAccountByAccountNum ~> check {
         status shouldEqual StatusCodes.NotFound
-        responseAs[String] shouldEqual "\"Account number 9999 was not found\""
+        responseAs[JsValue] shouldEqual s"{\"message\":Account number 9999 was not found}".toJson
       }
     }
   }

@@ -64,9 +64,9 @@ class Controller extends DefaultJsonProtocol with SprayJsonSupport{
     path ("api" / "accounts" / Segment) { accountNumber=>
       accounts.find(_.accountNumber == accountNumber) match {
         case Some(accountFound)=>
-          complete(OK, s"Account found: ${accountFound.toJson}".toJson )
+          complete(OK, accountFound.toJson)
         case None=>
-          complete(NotFound, s"Account number $accountNumber was not found".toJson)
+          complete(NotFound, s"{\"message\":Account number $accountNumber was not found}".toJson)
       }
     }
   }
