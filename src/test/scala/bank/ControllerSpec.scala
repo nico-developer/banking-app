@@ -43,7 +43,7 @@ class ControllerSpec extends AnyWordSpec with Matchers with ScalatestRouteTest w
                                   |}
                                   |""".stripMargin.replace("\n","").toJson
 
-        responseAs[JsValue].toJson shouldEqual expected
+        responseAs[String].toJson shouldEqual expected
       }
     }
 
